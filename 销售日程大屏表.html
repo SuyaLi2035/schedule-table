@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售日程表</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        th {
+            background: #343a40;
+            color: white;
+            font-size: 18px;
+        }
+        .btn {
+            margin: 5px;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .btn-add { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 120px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <img src='https://i.postimg.cc/bwLfdBpR/logo.png' alt='logo' class='logo'>
+    <h2 style="font-size: 48px;">销售日程表</h2>
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>时间段</th>
+                <th>名额</th>
+                <th style="width: 20%;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td contenteditable="true">2月26日</td>
+                <td contenteditable="true">21:30</td>
+                <td><span class='quota' style='font-size: 48px; font-weight: bold; color: #007bff;'>8</span></td>
+                <td>
+                    <button class="btn" onclick="decrement(this)">-</button>
+                    <button class="btn" onclick="increment(this)">+</button>
+                    <button class="btn btn-delete" onclick="deleteRow(this)">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-add" onclick="addRow()">新增一行</button>
+
+    <script>
+        function updateQuotaColor(quotaSpan) {
+            let value = parseInt(quotaSpan.innerText) || 0;
+            quotaSpan.style.color = value >= 3 ? '#007bff' : '#dc3545';
+        }
+
+        function addRow() {
+            let table = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
+            let newRow = table.insertRow();
+            newRow.innerHTML = `<td contenteditable='true' style='font-size: 32px; color: #007bff;'></td>
+                                <td contenteditable='true' style='font-size: 32px; color: #007bff;'></td>
+                                <td><span class='quota' style='font-size: 48px; font-weight: bold; color: #007bff;'>8</span></td>
+                                <td>
+                                    <button class='btn' onclick='decrement(this)'>-</button>
+                                    <button class='btn' onclick='increment(this)'>+</button>
+                                    <button class='btn btn-delete' onclick='deleteRow(this)'>删除</button>
+                                </td>`;
+            updateQuotaColor(newRow.querySelector('.quota'));
+        }
+        
+        function increment(button) {
+            let quotaSpan = button.parentNode.parentNode.querySelector('.quota');
+            let value = parseInt(quotaSpan.innerText) || 0;
+            quotaSpan.innerText = value + 1;
+            updateQuotaColor(quotaSpan);
+        }
+        
+        function decrement(button) {
+            let quotaSpan = button.parentNode.parentNode.querySelector('.quota');
+            let value = parseInt(quotaSpan.innerText) || 0;
+            if (value > 0) {
+                quotaSpan.innerText = value - 1;
+                updateQuotaColor(quotaSpan);
+            }
+        }
+        
+        function deleteRow(button) {
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+</body>
+</html>
